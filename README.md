@@ -6,7 +6,7 @@
 ## General info
 This project is an image classification based on Bag of Visual Words.
 
-###How it works?
+### How it works?
 1. Extract local features from image using SIFT detector and descriptor.
 2. Make clustering using algorithm MiniBatchKMeans with number of clusters equal 800.
 3. Compare these features with visual words and create histograms for each image for the train and test dataset.
