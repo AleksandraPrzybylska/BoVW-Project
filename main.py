@@ -50,7 +50,7 @@ def apply_feature_transform(
 
 
 def data_processing(x: np.ndarray) -> np.ndarray:
-    # TODO: add data processing here
+
     resized_x = []
     for i, img_file in enumerate(x):
         img_file = imutils.resize(img_file, width=min(1000, len(img_file[0])))  # resize images
@@ -62,11 +62,10 @@ def data_processing(x: np.ndarray) -> np.ndarray:
 def project():
     np.random.seed(42)
 
-    # TODO: fill the following values
     first_name = 'Aleksandra'
     last_name = 'Przybylska'
 
-    data_path = Path('train/')  # You can change the path here
+    data_path = Path('train/')  # Path to train images directory
     data_path = os.getenv('DATA_PATH', data_path)  # Don't change that line
 
     X, y = load_dataset(data_path)
@@ -74,40 +73,40 @@ def project():
 
     train_images, test_images, train_labels, test_labels = train_test_split(X, y, stratify=y, train_size=0.8, random_state=42)
 
-    # TODO: create a detector/descriptor here. Eg. cv2.AKAZE_create()
+    # Create a detector/descriptor here. Eg. cv2.AKAZE_create()
     feature_detector_descriptor = cv2.xfeatures2d.SIFT_create()
 
-    # TODO: train a vocabulary model and save it using pickle.dump function
-    # if './vocab_model.p' not in glob.glob('./*.p'):  # if there is our vocabulary model
-    #
-    #     NB_WORDS = 800
-    #     kmeans = cluster.MiniBatchKMeans(n_clusters=NB_WORDS, init_size=3 * NB_WORDS)
-    #     train_descriptors = [descriptor for image in train_images for descriptor in
-    #                         feature_detector_descriptor.detectAndCompute(image, None)[1]]
-    #
-    #     print('Descriptors', len(train_descriptors))
-    #
-    #     print("Training Vocabulary model")
-    #     kmeans.fit(train_descriptors)
-    #
-    #     print("Saving Vocabulary Model")
-    #     file_vocab = 'vocab_model.p'
-    #     pickle.dump(kmeans, open(file_vocab, 'wb'))
+    # Train a vocabulary model and save it using pickle.dump function
+    if './vocab_model.p' not in glob.glob('./*.p'):  # if there is our vocabulary model
+    
+        NB_WORDS = 800
+        kmeans = cluster.MiniBatchKMeans(n_clusters=NB_WORDS, init_size=3 * NB_WORDS)
+        train_descriptors = [descriptor for image in train_images for descriptor in
+                            feature_detector_descriptor.detectAndCompute(image, None)[1]]
+    
+        print('Descriptors', len(train_descriptors))
+    
+        print("Training Vocabulary model")
+        kmeans.fit(train_descriptors)
+    
+        print("Saving Vocabulary Model")
+        file_vocab = 'vocab_model.p'
+        pickle.dump(kmeans, open(file_vocab, 'wb'))
 
     with Path('vocab_model.p').open('rb') as vocab_file:  # Don't change the path here
         vocab_model = pickle.load(vocab_file)
 
-    # TODO: train a classifier and save it using pickle.dump function
+    # Train a classifier and save it using pickle.dump function
     X_train = apply_feature_transform(train_images, feature_detector_descriptor, vocab_model)
     y_train = train_labels
 
     X_test = apply_feature_transform(test_images, feature_detector_descriptor, vocab_model)
     y_test = test_labels
 
-    # classifier = make_pipeline(StandardScaler(), LinearSVC(random_state=42, tol=1e-5))
-    # classifier.fit(X_train, y_train)
-    # file_clf = 'clf.p'
-    # pickle.dump(classifier, open(file_clf, 'wb'))
+    classifier = make_pipeline(StandardScaler(), LinearSVC(random_state=42, tol=1e-5))
+    classifier.fit(X_train, y_train)
+    file_clf = 'clf.p'
+    pickle.dump(classifier, open(file_clf, 'wb'))
 
 
     with Path('clf.p').open('rb') as classifier_file:  # Don't change the path here
