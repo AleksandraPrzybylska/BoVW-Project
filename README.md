@@ -20,7 +20,8 @@ $ pip install -r requirements.txt
 ```
 
 If you want to train toyr classifier, you need to pass the directory path:
-```
+
+```python
 data_path = Path('train/') 
 ```
 To run this project:
