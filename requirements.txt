@@ -3,6 +3,5 @@ scikit-learn==0.22.2.post1
 opencv-python==4.2.0.34
 
 matplotlib
-sklearn
 imutils
 opencv-contrib-python
