@@ -1,7 +1,6 @@
 numpy==1.19.4
 scikit-learn==0.22.2.post1
 opencv-python==4.2.0.34
-
-matplotlib
-imutils
-opencv-contrib-python
+matplotlib==3.3.3
+imutils==0.5.3
+opencv-contrib-python==4.4.0.46
